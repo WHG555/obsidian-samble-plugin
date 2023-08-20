@@ -20,6 +20,23 @@ export default class MyPlugin extends Plugin {
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
 			new Notice('This is a notice!');
+
+
+			// 检查浏览器是否支持 Notification API
+			if ("Notification" in window) {
+				// 请求通知权限
+				Notification.requestPermission().then(permission => {
+				if (permission === "granted") {
+					// 创建一个通知
+					const notification = new Notification("通知标题", {
+					body: "这是通知的正文内容"
+					});
+				}
+				});
+			} else {
+				console.log("浏览器不支持通知功能");
+			}
+
 		});
 
 		// 使用功能区执行其他操作
@@ -34,33 +51,67 @@ export default class MyPlugin extends Plugin {
 			id: 'open-sample-modal-simple',
 			name: 'Open sample modal (simple)',
 			callback: () => {
+				// 检查浏览器是否支持 Notification API
+				if ("Notification" in window) {
+					// 请求通知权限
+					Notification.requestPermission().then(permission => {
+					if (permission === "granted") {
+						// 创建一个通知
+						const notification = new Notification("通知标题", {
+						body: "这是通知的正文内容"
+						});
+					}
+					});
+				} else {
+					console.log("浏览器不支持通知功能");
+				}
+
 				new SampleModal(this.app).open();
+				
 			}
 		});
+
 		// 这添加了一个编辑器命令，可以对当前编辑器实例执行一些操作
 		this.addCommand({
 			id: 'sample-editor-command',
 			name: 'Sample editor command',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				console.log(editor.getSelection());
+
+				// 检查浏览器是否支持 Notification API
+				if ("Notification" in window) {
+					// 请求通知权限
+					Notification.requestPermission().then(permission => {
+					if (permission === "granted") {
+						// 创建一个通知
+						const notification = new Notification("通知标题", {
+						body: "这是通知的正文内容"
+						});
+					}
+					});
+				} else {
+					console.log("浏览器不支持通知功能");
+				}
+
 				editor.replaceSelection('Sample Editor Command');
 			}
 		});
+
 		// 这添加了一个复杂的命令，可以检查应用程序的当前状态是否允许执行该命令
 		this.addCommand({
 			id: 'open-sample-modal-complex',
 			name: 'Open sample modal (complex)',
 			checkCallback: (checking: boolean) => {
-				// Conditions to check
+				// 检查条件
 				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
+					// 如果检查是真的，我们只是“检查”命令是否可以运行。
+					// 如果checking为false，那么我们希望实际执行该操作。
 					if (!checking) {
 						new SampleModal(this.app).open();
 					}
 
-					// This command will only show up in Command Palette when the check function returns true
+					// 只有当check函数返回true时，此命令才会显示在command Palette中
 					return true;
 				}
 			}
@@ -93,6 +144,7 @@ export default class MyPlugin extends Plugin {
 	}
 }
 
+// 显示一个弹出页面
 class SampleModal extends Modal {
 	constructor(app: App) {
 		super(app);
