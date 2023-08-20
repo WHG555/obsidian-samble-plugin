@@ -1,7 +1,6 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
-// Remember to rename these classes and interfaces!
-
+// 接口和类
 interface MyPluginSettings {
 	mySetting: string;
 }
@@ -13,22 +12,24 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
+	// 加载时运行
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
+		// 这将在左侧功能区中创建一个图标。
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
 			new Notice('This is a notice!');
 		});
-		// Perform additional things with the ribbon
+
+		// 使用功能区执行其他操作
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
+		// 这会在应用程序的底部添加一个状态栏项目。不适用于移动应用程序。
 		const statusBarItemEl = this.addStatusBarItem();
 		statusBarItemEl.setText('Status Bar Text');
 
-		// This adds a simple command that can be triggered anywhere
+		// 这添加了一个可以在任何地方触发的简单命令
 		this.addCommand({
 			id: 'open-sample-modal-simple',
 			name: 'Open sample modal (simple)',
@@ -36,7 +37,7 @@ export default class MyPlugin extends Plugin {
 				new SampleModal(this.app).open();
 			}
 		});
-		// This adds an editor command that can perform some operation on the current editor instance
+		// 这添加了一个编辑器命令，可以对当前编辑器实例执行一些操作
 		this.addCommand({
 			id: 'sample-editor-command',
 			name: 'Sample editor command',
@@ -45,7 +46,7 @@ export default class MyPlugin extends Plugin {
 				editor.replaceSelection('Sample Editor Command');
 			}
 		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
+		// 这添加了一个复杂的命令，可以检查应用程序的当前状态是否允许执行该命令
 		this.addCommand({
 			id: 'open-sample-modal-complex',
 			name: 'Open sample modal (complex)',
@@ -65,16 +66,15 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
+		// 这添加了一个设置选项卡，以便用户可以配置插件的各个方面
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
+		// 如果插件挂接了任何全局DOM事件（在应用程序的不属于此插件的部分上）当此插件被禁用时，使用此函数将自动删除事件侦听器。
 		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
 			console.log('click', evt);
 		});
 
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
+		// 注册间隔时，此函数将在插件被禁用时自动清除间隔。
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
@@ -82,10 +82,12 @@ export default class MyPlugin extends Plugin {
 
 	}
 
+	// 导入设置
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
+	// 保存设置
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
@@ -107,6 +109,7 @@ class SampleModal extends Modal {
 	}
 }
 
+// 插件设置
 class SampleSettingTab extends PluginSettingTab {
 	plugin: MyPlugin;
 
@@ -121,8 +124,8 @@ class SampleSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
+			.setName('Setting #1') 		// 设置名称
+			.setDesc('It\'s a secret')	// 设置描述
 			.addText(text => text
 				.setPlaceholder('Enter your secret')
 				.setValue(this.plugin.settings.mySetting)
