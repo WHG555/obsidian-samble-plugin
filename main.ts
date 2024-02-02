@@ -14,6 +14,7 @@ export default class MyPlugin extends Plugin {
 
 	// 加载时运行
 	async onload() {
+		console.log("plugin loading");
 		await this.loadSettings();
 
 		// 这将在左侧功能区中创建一个图标。
@@ -130,7 +131,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-
+		console.log("plugin unloading");
 	}
 
 	// 导入设置
